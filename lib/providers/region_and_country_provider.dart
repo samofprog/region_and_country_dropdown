@@ -3,7 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
-import 'package:region_and_country_dropdown/models/main.dart';
+import 'package:region_and_country_dropdown/models/country_model.dart';
+import 'package:region_and_country_dropdown/models/region_model.dart';
 
 class RegionAndCountryProvider extends InheritedWidget {
   final String uuid = const Uuid().v4();
