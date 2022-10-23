@@ -1,6 +1,6 @@
 # region_and_country_dropdown
 
-Region and country fullter dropdown package
+Flutter package to facilitate your selection of countries and regions in your form
 
 ## Getting Started
 

@@ -29,6 +29,7 @@ class MyApp extends StatelessWidget {
                   regionLabel: "Régions",
                   searchCountryHintText: "Recherchez votre pays",
                   searchRegionHintText: "Recherchez la ville",
+                  countryRequiredErrorMessage: "Veuillez entrez un pays svp",
                 ),
               ],
             ),

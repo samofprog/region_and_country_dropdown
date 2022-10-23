@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:find_dropdown/find_dropdown.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,15 +13,20 @@ class RegionDropdown extends StatefulWidget {
   final String? hintText;
   final String? searchText;
   final bool? isMixWithRegion;
+  final Widget Function(BuildContext)? emptyBuilder;
+  final BoxDecoration? boxDecoration;
+  final RegionModel? selectedItem;
 
   const RegionDropdown(
       {Key? key,
-        required this.onChanged,
-        this.disabled,
-        this.label,
-        this.hintText,
-        this.searchText,
-        this.isMixWithRegion})
+      required this.onChanged,
+      this.disabled,
+      this.label,
+      this.hintText,
+      this.searchText,
+      this.isMixWithRegion,
+      this.emptyBuilder,
+      this.boxDecoration, this.selectedItem})
       : super(key: key);
 
   @override
@@ -34,34 +41,37 @@ class _RegionDropdownState extends State<RegionDropdown> {
     var sc = RegionAndCountryProvider.of(context).currentCountry;
     return (sc == null && widget.isMixWithRegion == true)
         ? AbsorbPointer(
-      child: FindDropdown<RegionModel>(
-        label: widget.label,
-        items: const [],
-        onChanged: (RegionModel? data) {},
-        dropdownBuilder: _buidlItemView,
-        searchHint: widget.searchText,
-      ),
-    )
+            child: FindDropdown<RegionModel>(
+              label: widget.label,
+              items: const [],
+              onChanged: (RegionModel? data) {},
+              dropdownBuilder: _buidlItemView,
+              searchHint: widget.searchText,
+            ),
+          )
         : FindDropdown<RegionModel>(
-      label: widget.label,
-      onFind: onFind,
-      onChanged: (RegionModel? data) {
-        RegionAndCountryProvider.of(context).previousUniqid =
-            RegionAndCountryProvider.of(context).uniqId;
-        setState(() {});
-        widget.onChanged(data);
-      },
-      dropdownBuilder: _buidlItemView,
-      dropdownItemBuilder: _dropdownBuilder,
-      searchHint: widget.searchText,
-    );
+            label: widget.label,
+            onFind: onFind,
+            items: filter(RegionAndCountryProvider.of(context).regions),
+            onChanged: (RegionModel? data) {
+              RegionAndCountryProvider.of(context).previousUniqid =
+                  RegionAndCountryProvider.of(context).uniqId;
+              setState(() {});
+              widget.onChanged(data);
+            },
+            dropdownBuilder: _buidlItemView,
+            dropdownItemBuilder: _dropdownBuilder,
+            searchHint: widget.searchText,
+            emptyBuilder: widget.emptyBuilder,
+            selectedItem: widget.selectedItem,
+          );
   }
 
   Future<List<RegionModel>> onFind(String value) async {
     var regions = filter(RegionAndCountryProvider.of(context).regions);
     if (value.isEmpty == false) {
       var filtered = regions?.where((e) =>
-      e.name.toLowerCase().contains(value.trim().toLowerCase()) == true);
+          e.name.toLowerCase().contains(value.trim().toLowerCase()) == true);
       return filtered?.toList() ?? [];
     }
     return regions ?? [];
@@ -84,10 +94,10 @@ class _RegionDropdownState extends State<RegionDropdown> {
       decoration: !isSelected
           ? null
           : BoxDecoration(
-        border: Border.all(color: Theme.of(context).primaryColor),
-        borderRadius: BorderRadius.circular(5),
-        color: Colors.white,
-      ),
+              border: Border.all(color: Theme.of(context).primaryColor),
+              borderRadius: BorderRadius.circular(5),
+              color: Colors.white,
+            ),
       child: ListTile(
         selected: isSelected,
         title: Text(item.name ?? ''),
@@ -99,33 +109,34 @@ class _RegionDropdownState extends State<RegionDropdown> {
     if (RegionAndCountryProvider.of(context).uniqId !=
         RegionAndCountryProvider.of(context).previousUniqid) {
       return Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: Theme.of(context).dividerColor),
-            borderRadius: BorderRadius.circular(5),
-            color: Colors.white,
-          ),
+          decoration: widget.boxDecoration ??
+              BoxDecoration(
+                border: Border.all(color: Theme.of(context).dividerColor),
+                borderRadius: BorderRadius.circular(5),
+                color: Colors.white,
+              ),
           child: ListTile(
               title: Text(
-                widget.hintText ?? "Choose a state",
-              )));
+            widget.hintText ?? "Choose a state",
+          )));
     }
 
     if (item != null) {
       return Container(
-          decoration: BoxDecoration(
+          decoration: widget.boxDecoration ?? BoxDecoration(
             border: Border.all(color: Theme.of(context).dividerColor),
             borderRadius: BorderRadius.circular(5),
             color: Colors.white,
           ),
           child: ListTile(
               title: Text(
-                item.name,
-              )));
+            item.name,
+          )));
     }
     if (RegionAndCountryProvider.of(context).currentCountry == null &&
         item != null) {
       return Container(
-          decoration: BoxDecoration(
+          decoration: widget.boxDecoration ?? BoxDecoration(
             border: Border.all(color: Theme.of(context).dividerColor),
             borderRadius: BorderRadius.circular(5),
             color: Colors.white,
@@ -136,26 +147,26 @@ class _RegionDropdownState extends State<RegionDropdown> {
         item == null &&
         widget.isMixWithRegion != true) {
       return Container(
-          decoration: BoxDecoration(
+          decoration:widget.boxDecoration ??  BoxDecoration(
             border: Border.all(color: Theme.of(context).dividerColor),
             borderRadius: BorderRadius.circular(5),
             color: Colors.white,
           ),
           child: ListTile(
               title: Text(
-                widget.hintText ?? "Choose a state",
-              )));
+            widget.hintText ?? "Choose a state",
+          )));
     }
     return Container(
-        decoration: BoxDecoration(
+        decoration: widget.boxDecoration ?? BoxDecoration(
           border: Border.all(color: Theme.of(context).dividerColor),
           borderRadius: BorderRadius.circular(5),
           color: Colors.white,
         ),
         child: ListTile(
             title: Text(
-              widget.hintText ?? "Choose a state",
-              style: TextStyle(color: Theme.of(context).disabledColor),
-            )));
+          widget.hintText ?? "Choose a state",
+          style: TextStyle(color: Theme.of(context).disabledColor),
+        )));
   }
 }

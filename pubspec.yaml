@@ -1,7 +1,7 @@
 name: region_and_country_dropdown
-description: Region and country fullter dropdown package
+description: Region and country flutter dropdown package
 version: 0.0.1
-homepage:
+homepage: https://github.com/samofprog/region_and_country_dropdown
 
 environment:
   sdk: '>=2.18.2 <3.0.0'
