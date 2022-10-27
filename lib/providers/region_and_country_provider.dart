@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
-
 import 'package:region_and_country_dropdown/models/country_model.dart';
 import 'package:region_and_country_dropdown/models/region_model.dart';
 
@@ -12,8 +11,6 @@ class RegionAndCountryProvider extends InheritedWidget {
   final List<RegionModel>? regions;
   CountryModel? previousCountry;
   CountryModel? currentCountry;
-  String uniqId = 'uuid';
-  String previousUniqid = 'uuid';
 
   RegionAndCountryProvider(
       {super.key, required super.child, required this.countries, this.regions});
