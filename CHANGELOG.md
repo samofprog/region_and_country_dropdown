@@ -1,3 +1,3 @@
 ## 0.0.1
 
-* TODO: Describe initial release.
+* Support for 30 global languages, use of country_dropdown and region_dropdown widgets individually and combined .

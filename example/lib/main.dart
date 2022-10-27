@@ -19,19 +19,20 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   bool _countryError = false;
   bool _regionError = false;
-  bool _countryMixWithRegionError = false;
-  bool _regionMixWithCountryError = false;
-  CountryModel? _selectedCountry;
+  bool _countryCombinedWithRegionError = false;
+  bool _regionCombinedWithCountryError = false;
   RegionModel? _selectedRegion;
-  CountryModel? _selectedCountryMixWithRegion;
-  RegionModel? _selectedRegionMixWithCountry;
+  CountryModel? _selectedCountryCombinedWithRegion;
+  RegionModel? _selectedRegionCombinedWithCountry;
   CountryModel? _selectedCountryWithError;
   RegionModel? _selectedRegionWithError;
-  CountryModel? _selectedCountryMixWithRegionWithError;
-  RegionModel? _selectedRegionMixWithCountryWithError;
+  CountryModel? _selectedCountryCombinedWithRegionWithError;
+  RegionModel? _selectedRegionCombinedWithCountryWithError;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Plugin example app'),
@@ -40,12 +41,12 @@ class _MyAppState extends State<MyApp> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              sigleCountryDropdownExample(),
-              sigleRegionDropdownExample(),
-              countryMixWithRegionExample(),
-              sigleCountryWithErrorHandlingExample(),
-              sigleRegionWithErrorHandlingExample(),
-              countryMixWithRegionErrorHandlingExample()
+              singleCountryDropdownExample(),
+              singleRegionDropdownExample(),
+              countryCombinedWithRegionExample(),
+              singleCountryWithErrorHandlingExample(),
+              singleRegionWithErrorHandlingExample(),
+              countryCombinedWithRegionErrorHandlingExample()
             ],
           ),
         ),
@@ -53,7 +54,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  Widget sigleCountryDropdownExample() {
+  Widget singleCountryDropdownExample() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -64,17 +65,13 @@ class _MyAppState extends State<MyApp> {
         Padding(
             padding: const EdgeInsets.all(8.0),
             child: CountryDropdown(
-              onChanged: (CountryModel? country) async {
-                setState(() {
-                  _selectedCountry = country;
-                });
-              },
+              onChanged: (CountryModel? country) async {},
             )),
       ],
     );
   }
 
-  Widget sigleRegionDropdownExample() {
+  Widget singleRegionDropdownExample() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -96,7 +93,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  Widget countryMixWithRegionExample() {
+  Widget countryCombinedWithRegionExample() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -109,8 +106,8 @@ class _MyAppState extends State<MyApp> {
             child: CountryDropdown(
               onChanged: (CountryModel? country) async {
                 setState(() {
-                  _selectedCountryMixWithRegion = country;
-                  _selectedRegionMixWithCountry = null;
+                  _selectedCountryCombinedWithRegion = country;
+                  _selectedRegionCombinedWithCountry = null;
                 });
               },
             )),
@@ -119,18 +116,18 @@ class _MyAppState extends State<MyApp> {
             child: RegionDropdown(
               onChanged: (RegionModel? region) async {
                 setState(() {
-                  _selectedRegionMixWithCountry = region;
+                  _selectedRegionCombinedWithCountry = region;
                 });
               },
-              selectedCountry: _selectedCountryMixWithRegion,
-              selectedItem: _selectedRegionMixWithCountry,
-              isMixWithCountry: true,
+              selectedCountry: _selectedCountryCombinedWithRegion,
+              selectedItem: _selectedRegionCombinedWithCountry,
+              dependsOnTheChosenCountry: true,
             )),
       ],
     );
   }
 
-  Widget sigleCountryWithErrorHandlingExample() {
+  Widget singleCountryWithErrorHandlingExample() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -181,7 +178,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  Widget sigleRegionWithErrorHandlingExample() {
+  Widget singleRegionWithErrorHandlingExample() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -203,6 +200,7 @@ class _MyAppState extends State<MyApp> {
                   boxDecoration: BoxDecoration(
                       border: Border.all(color: Theme.of(context).errorColor),
                       borderRadius: const BorderRadius.all(Radius.circular(5))),
+                  selectedItem: _selectedRegionWithError,
                 ))
             : Padding(
                 padding: const EdgeInsets.only(
@@ -216,8 +214,7 @@ class _MyAppState extends State<MyApp> {
                   selectedItem: _selectedRegionWithError,
                 )),
         Padding(
-          padding:
-              const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0, top: 0),
+          padding: const EdgeInsets.all(10.0),
           child: ElevatedButton(
             child: const Text('submit'),
             onPressed: () {
@@ -233,22 +230,23 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  Widget countryMixWithRegionErrorHandlingExample() {
+  Widget countryCombinedWithRegionErrorHandlingExample() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Padding(
           padding: EdgeInsets.all(10.0),
-          child: Text('Example with mix country and region dropdown with error handling'),
+          child: Text(
+              'Example with mix country and region dropdown with error handling'),
         ),
-        _countryMixWithRegionError
+        _countryCombinedWithRegionError
             ? Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: CountryDropdown(
                   onChanged: (CountryModel? country) async {
                     setState(() {
-                      _selectedCountryMixWithRegionWithError = country;
-                      _countryMixWithRegionError = false;
+                      _selectedCountryCombinedWithRegionWithError = country;
+                      _countryCombinedWithRegionError = false;
                     });
                   },
                   requiredErrorMessage: 'country is required',
@@ -262,55 +260,55 @@ class _MyAppState extends State<MyApp> {
                 child: CountryDropdown(
                   onChanged: (CountryModel? country) async {
                     setState(() {
-                      _selectedCountryMixWithRegionWithError = country;
+                      _selectedCountryCombinedWithRegionWithError = country;
                     });
                   },
                 )),
-        _regionMixWithCountryError
+        _regionCombinedWithCountryError
             ? Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: RegionDropdown(
-              onChanged: (RegionModel? region) async {
-                setState(() {
-                  _selectedRegionMixWithCountryWithError = region;
-                  _regionMixWithCountryError = false;
-                });
-              },
-              isMixWithCountry: true,
-              requiredErrorMessage: 'region is required',
-              selectedItem: _selectedRegionMixWithCountryWithError,
-              selectedCountry: _selectedCountryMixWithRegionWithError ,
-              boxDecoration: BoxDecoration(
-                  border: Border.all(color: Theme.of(context).errorColor),
-                  borderRadius: const BorderRadius.all(Radius.circular(5))),
-            ))
+                padding: const EdgeInsets.all(8.0),
+                child: RegionDropdown(
+                  onChanged: (RegionModel? region) async {
+                    setState(() {
+                      _selectedRegionCombinedWithCountryWithError = region;
+                      _regionCombinedWithCountryError = false;
+                    });
+                  },
+                  dependsOnTheChosenCountry: true,
+                  requiredErrorMessage: 'region is required',
+                  selectedItem: _selectedRegionCombinedWithCountryWithError,
+                  selectedCountry: _selectedCountryCombinedWithRegionWithError,
+                  boxDecoration: BoxDecoration(
+                      border: Border.all(color: Theme.of(context).errorColor),
+                      borderRadius: const BorderRadius.all(Radius.circular(5))),
+                ))
             : Padding(
-            padding: const EdgeInsets.only(
-                top: 8.0, left: 8.0, right: 8.0, bottom: 0),
-            child: RegionDropdown(
-              onChanged: (RegionModel? region) async {
-                setState(() {
-                  _selectedRegionMixWithCountryWithError = region;
-                });
-              },
-              selectedItem: _selectedRegionMixWithCountryWithError,
-              selectedCountry: _selectedCountryMixWithRegionWithError ,
-              isMixWithCountry: true,
-            )),
+                padding: const EdgeInsets.only(
+                    top: 8.0, left: 8.0, right: 8.0, bottom: 0),
+                child: RegionDropdown(
+                  onChanged: (RegionModel? region) async {
+                    setState(() {
+                      _selectedRegionCombinedWithCountryWithError = region;
+                    });
+                  },
+                  selectedItem: _selectedRegionCombinedWithCountryWithError,
+                  selectedCountry: _selectedCountryCombinedWithRegionWithError,
+                  dependsOnTheChosenCountry: true,
+                )),
         Padding(
-          padding:
-              const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0, top: 10.0),
+          padding: const EdgeInsets.only(
+              left: 8.0, right: 8.0, bottom: 8.0, top: 10.0),
           child: ElevatedButton(
             child: const Text('submit'),
             onPressed: () {
-              if (_selectedCountryMixWithRegionWithError == null) {
+              if (_selectedCountryCombinedWithRegionWithError == null) {
                 setState(() {
-                  _countryMixWithRegionError = true;
+                  _countryCombinedWithRegionError = true;
                 });
               }
-              if (_selectedRegionMixWithCountryWithError == null) {
+              if (_selectedRegionCombinedWithCountryWithError == null) {
                 setState(() {
-                  _regionMixWithCountryError = true;
+                  _regionCombinedWithCountryError = true;
                 });
               }
             },

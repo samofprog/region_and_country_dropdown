@@ -12,7 +12,7 @@ class RegionDropdown extends StatefulWidget {
   final bool? disabled;
   final String? hintText;
   final String? searchText;
-  final bool? isMixWithCountry;
+  final bool? dependsOnTheChosenCountry;
   final Widget Function(BuildContext)? emptyBuilder;
   final BoxDecoration? boxDecoration;
   final RegionModel? selectedItem;
@@ -26,10 +26,10 @@ class RegionDropdown extends StatefulWidget {
       this.label,
       this.hintText,
       this.searchText,
-      this.isMixWithCountry,
+      this.dependsOnTheChosenCountry,
       this.emptyBuilder,
       this.boxDecoration,
-      this.selectedItem,
+      required this.selectedItem,
       this.selectedCountry,
       this.requiredErrorMessage})
       : super(key: key);
@@ -41,7 +41,7 @@ class RegionDropdown extends StatefulWidget {
 class _RegionDropdownState extends State<RegionDropdown> {
   @override
   Widget build(BuildContext context) {
-    if(widget.selectedCountry == null && widget.isMixWithCountry == true){
+    if(widget.selectedCountry == null && widget.dependsOnTheChosenCountry == true){
        if(widget.requiredErrorMessage != null &&
            widget.requiredErrorMessage?.isEmpty == false){
          return Column(crossAxisAlignment: CrossAxisAlignment.start,children: [
@@ -165,7 +165,7 @@ class _RegionDropdownState extends State<RegionDropdown> {
               ),
           child: ListTile(title: Text(item.name)));
     }
-    if (widget.selectedCountry == null && widget.isMixWithCountry == true) {
+    if (widget.selectedCountry == null && widget.dependsOnTheChosenCountry == true) {
       return Container(
           decoration: widget.boxDecoration ??
               BoxDecoration(
