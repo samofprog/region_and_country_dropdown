@@ -16,6 +16,7 @@ class CountryDropdown extends StatefulWidget {
   final String? lang;
   final BoxDecoration? boxDecoration;
   final String? requiredErrorMessage;
+  final CountryModel? selectedItem;
 
   const CountryDropdown({
     Key? key,
@@ -27,6 +28,7 @@ class CountryDropdown extends StatefulWidget {
     this.hintText,
     this.boxDecoration,
     this.requiredErrorMessage,
+    this.selectedItem,
   }) : super(key: key);
 
   @override
@@ -34,7 +36,6 @@ class CountryDropdown extends StatefulWidget {
 }
 
 class _CountryDropdownState extends State<CountryDropdown> {
-  RegionModel? selectedItem;
   final TextEditingController _controller = TextEditingController();
 
   @override
@@ -49,6 +50,7 @@ class _CountryDropdownState extends State<CountryDropdown> {
         items: getData(widget.lang),
         dropdownBuilder: _buidlItemView,
         dropdownItemBuilder: _dropdownBuilder,
+        selectedItem: widget.selectedItem,
       );
     }
     return Column(
@@ -62,10 +64,14 @@ class _CountryDropdownState extends State<CountryDropdown> {
           items: getData(widget.lang),
           dropdownBuilder: _buidlItemView,
           dropdownItemBuilder: _dropdownBuilder,
+          selectedItem: widget.selectedItem,
         ),
         Padding(
           padding: const EdgeInsets.only(left: 12.0),
-          child: Text(widget.requiredErrorMessage ?? '',style: TextStyle(color: Theme.of(context).errorColor),),
+          child: Text(
+            widget.requiredErrorMessage ?? '',
+            style: TextStyle(color: Theme.of(context).errorColor),
+          ),
         )
       ],
     );
@@ -107,10 +113,25 @@ class _CountryDropdownState extends State<CountryDropdown> {
             borderRadius: BorderRadius.circular(5),
             color: Colors.white,
           ),
-      child: (item?.flag == null)
-          ? ListTile(
-              leading: const Icon(Icons.flag),
-              title: Text(widget.hintText ?? "Choose a country"))
+      child: (item == null)
+          ? widget.selectedItem == null
+              ? ListTile(
+                  leading: const Icon(Icons.flag),
+                  title: Text(widget.hintText ?? "Choose a country"))
+              : ListTile(
+                  leading: SizedBox(
+                    width: 30,
+                    height: 30,
+                    child: ClipOval(
+                      child: SvgPicture.asset(
+                        widget.selectedItem?.flag?.replaceAll(':', 's:') ?? '',
+                        width: 30,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  title: Text(widget.selectedItem?.translatedName ?? ''),
+                )
           : ListTile(
               leading: SizedBox(
                 width: 30,

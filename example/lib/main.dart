@@ -41,7 +41,7 @@ class _MyAppState extends State<MyApp> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              singleCountryDropdownExample(),
+              singleCountryDropdownExample(context),
               singleRegionDropdownExample(),
               countryCombinedWithRegionExample(),
               singleCountryWithErrorHandlingExample(),
@@ -54,7 +54,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  Widget singleCountryDropdownExample() {
+  Widget singleCountryDropdownExample(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -66,6 +66,7 @@ class _MyAppState extends State<MyApp> {
             padding: const EdgeInsets.all(8.0),
             child: CountryDropdown(
               onChanged: (CountryModel? country) async {},
+              selectedItem: CountryModel.fromTranslatedName("Côte d'Ivoire", context, 'fr'),
             )),
       ],
     );

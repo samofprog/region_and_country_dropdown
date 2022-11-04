@@ -1,6 +1,9 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+
+import '../providers/region_and_country_provider.dart';
 
 class CountryModel {
   final String? flag;
@@ -39,37 +42,37 @@ class CountryModel {
 
   CountryModel(
       {required this.ar,
-        required this.bg,
-        required this.cs,
-        required this.da,
-        required this.de,
-        required this.el,
-        required this.en,
-        required this.eo,
-        required this.es,
-        required this.et,
-        required this.eu,
-        required this.fi,
-        required this.fr,
-        required this.hu,
-        required this.it,
-        required this.ja,
-        required this.ko,
-        required this.lt,
-        required this.nl,
-        required this.no,
-        required this.pl,
-        required this.pt,
-        required this.ro,
-        required this.ru,
-        required this.sk,
-        required this.sv,
-        required this.th,
-        required this.uk,
-        required this.zh,
-        required this.zhTw,
-        required this.alpha2,
-        required this.flag});
+      required this.bg,
+      required this.cs,
+      required this.da,
+      required this.de,
+      required this.el,
+      required this.en,
+      required this.eo,
+      required this.es,
+      required this.et,
+      required this.eu,
+      required this.fi,
+      required this.fr,
+      required this.hu,
+      required this.it,
+      required this.ja,
+      required this.ko,
+      required this.lt,
+      required this.nl,
+      required this.no,
+      required this.pl,
+      required this.pt,
+      required this.ro,
+      required this.ru,
+      required this.sk,
+      required this.sv,
+      required this.th,
+      required this.uk,
+      required this.zh,
+      required this.zhTw,
+      required this.alpha2,
+      required this.flag});
 
   factory CountryModel.fromJson(Map<String, dynamic> json) {
     return CountryModel(
@@ -107,38 +110,54 @@ class CountryModel {
         flag: json['flag']);
   }
 
+  static CountryModel? fromTranslatedName(
+      String? item, BuildContext context, String? lang) {
+    CountryModel? selectedItem;
+    var length = RegionAndCountryProvider.of(context).countries?.length ?? 0;
+    for (var i = 0; i < length; i++) {
+      var json = RegionAndCountryProvider.of(context).countries![i].toJson();
+      RegionAndCountryProvider.of(context).countries![i].translatedName =
+          json[lang ?? 'en'];
+      if (RegionAndCountryProvider.of(context).countries![i].translatedName ==
+          item) {
+        selectedItem = RegionAndCountryProvider.of(context).countries![i];
+      }
+    }
+    return selectedItem;
+  }
+
   Map toJson() => {
-    "ar": ar,
-    "bg": bg,
-    "cs": cs,
-    "da": da,
-    "de": de,
-    "el": el,
-    "en": en,
-    "eo": eo,
-    "es": es,
-    "et": et,
-    "eu": eu,
-    "fi": fi,
-    "fr": fr,
-    "hu": hu,
-    "it": it,
-    "ja": ja,
-    "ko": ko,
-    "lt": lt,
-    "nl": nl,
-    "no": no,
-    "pl": pl,
-    "pt": pt,
-    "ro": ro,
-    "ru": ru,
-    "sk": sk,
-    "sv": sv,
-    "th": th,
-    "uk": uk,
-    "zh": zh,
-    "zh-tw": zhTw,
-  };
+        "ar": ar,
+        "bg": bg,
+        "cs": cs,
+        "da": da,
+        "de": de,
+        "el": el,
+        "en": en,
+        "eo": eo,
+        "es": es,
+        "et": et,
+        "eu": eu,
+        "fi": fi,
+        "fr": fr,
+        "hu": hu,
+        "it": it,
+        "ja": ja,
+        "ko": ko,
+        "lt": lt,
+        "nl": nl,
+        "no": no,
+        "pl": pl,
+        "pt": pt,
+        "ro": ro,
+        "ru": ru,
+        "sk": sk,
+        "sv": sv,
+        "th": th,
+        "uk": uk,
+        "zh": zh,
+        "zh-tw": zhTw,
+      };
 
   @override
   String toString() {
@@ -152,7 +171,7 @@ class CountryModel {
     return data.map<CountryModel>((c) {
       var flag = c['alpha2'];
       flag =
-      'packages/region_and_country_dropdown/assets/countries/flags/$flag.svg';
+          'packages/region_and_country_dropdown/assets/countries/flags/$flag.svg';
       return CountryModel(
           ar: c['ar'],
           bg: c['bg'],
